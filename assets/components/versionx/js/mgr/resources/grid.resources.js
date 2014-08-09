@@ -98,6 +98,12 @@ Ext.extend(VersionX.grid.Resources,MODx.grid.Grid,{
                 this.revertVersion(d.version_id, d.content_id)
             },
             scope: this
+        },{
+            text: _('versionx.resources.remove', {id: d.version_id}),
+            handler: function() {
+                this.removeVersion(d.version_id, d.content_id)
+            },
+            scope: this
         });
         if (m.length > 0) {
             this.addContextMenuItem(m);
@@ -119,6 +125,27 @@ Ext.extend(VersionX.grid.Resources,MODx.grid.Grid,{
                 success: {fn: function() {
                     MODx.msg.status({
                         message: _('versionx.resources.reverted'),
+                        delay: 4
+                    });
+                }, scope: this }
+            }
+        });
+    },
+    removeVersion: function(version, content) {
+        if (version < 1) { MODx.alert(_('error'), 'Version not properly defined: '+version); }
+        MODx.msg.confirm({
+            title: _('versionx.resources.remove.confirm'),
+            text: _('versionx.resources.remove.confirm.text',{id: version}),
+            url: VersionX.config.connector_url,
+            params: {
+                version_id: version,
+                content_id: content,
+                action: 'mgr/resources/remove'
+            },
+            listeners: {
+                success: {fn: function() {
+                    MODx.msg.status({
+                        message: _('versionx.resources.removed'),
                         delay: 4
                     });
                 }, scope: this }
